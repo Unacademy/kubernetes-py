@@ -20,7 +20,8 @@ class BaseUrls(object):
     default_extensions_version = 'v1beta1'
     default_cron_version = 'v1beta1'
 
-    def __init__(self, namespace='default', api=None, apps=None, autoscaling=None, extensions=None, batch=None, cron=None):
+    def __init__(self, namespace='default', api=None, apps=None, autoscaling=None,
+                 extensions=None, batch=None, cron=None, deployment_endpoint_resource="extensions"):
 
         if api is None:
             api = self.default_api_version
@@ -31,7 +32,10 @@ class BaseUrls(object):
         if batch is None:
             batch = self.default_batch_version
         if extensions is None:
-            extensions = self.default_extensions_version
+            if deployment_endpoint_resource == "extensions":
+                extensions = self.default_extensions_version
+            else:
+                extensions = self.default_api_version
         if cron is None:
             cron = self.default_cron_version
 
@@ -66,9 +70,9 @@ class BaseUrls(object):
         self.urls['CronJob'] = '/apis/batch/{0}/namespaces/{1}/cronjobs'.format(cron, namespace)
 
         # extensions
-        self.urls['DaemonSet'] = '/apis/extensions/{0}/namespaces/{1}/daemonsets'.format(extensions, namespace)
-        self.urls['Deployment'] = '/apis/extensions/{0}/namespaces/{1}/deployments'.format(extensions, namespace)
-        self.urls['ReplicaSet'] = '/apis/extensions/{0}/namespaces/{1}/replicasets'.format(extensions, namespace)
+        self.urls['DaemonSet'] = '/apis/{0}/{1}/namespaces/{2}/daemonsets'.format(deployment_endpoint_resource, extensions, namespace)
+        self.urls['Deployment'] = '/apis/{0}/{1}/namespaces/{2}/deployments'.format(deployment_endpoint_resource, extensions, namespace)
+        self.urls['ReplicaSet'] = '/apis/{0}/{1}/namespaces/{2}/replicasets'.format(deployment_endpoint_resource, extensions, namespace)
 
         # other
         self.urls['Volume'] = None

@@ -33,8 +33,8 @@ VALID_HOST_RE = re.compile(r'^(http[s]?\:\/\/)?([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-
 
 
 class K8sConfig(object):
-    def __init__(self, kubeconfig=None, api_host=None, auth=None, cert=None,
-                 namespace=None, pull_secret=None, token=None, version=None):
+    def __init__(self, kubeconfig=None, api_host=None, auth=None, cert=None, namespace=None, pull_secret=None,
+                 token=None, version=None, deployment_endpoint_resource=None):
         """
         Pulls configuration from a kubeconfig file, if present, otherwise accepts user-defined parameters.
         See http://kubernetes.io/docs/user-guide/kubeconfig-file/ for information on the kubeconfig file.
@@ -46,6 +46,7 @@ class K8sConfig(object):
         :param pull_secret: The password to use when pulling images from the container repository.
         :param token: An authentication token. Mutually exclusive with 'auth'.
         :param version: The version of the API to target. Defaults to 'v1'.
+        :param deployment_endpoint_resource: endpoint resource to targe. Defaults to 'extensions'.
         """
 
         super(K8sConfig, self).__init__()
@@ -61,6 +62,7 @@ class K8sConfig(object):
         self.namespace = None
         self.token = None
         self.version = None
+        self.deployment_endpoint_resource = None
 
         self._init_with_defaults()
 
@@ -131,6 +133,13 @@ class K8sConfig(object):
                 valid = ", ".join(VALID_API_VERSIONS)
                 raise SyntaxError('K8sConfig: api_version: [ {0} ] must be in: [ {1} ]'.format(version, valid))
             self.version = version
+
+        if deployment_endpoint_resource is not None:
+            if not isinstance(version, str):
+                raise SyntaxError(
+                    'K8sConfig: deployment_endpoint_resource {} must be strings.'.format(deployment_endpoint_resource))
+            self.deployment_endpoint_resource = deployment_endpoint_resource
+
         return
 
     def _init_with_defaults(self):
