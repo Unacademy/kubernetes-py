@@ -67,9 +67,13 @@ class K8sObject(object):
         self.name = name
 
         try:
-            urls = BaseUrls(api=self.config.version, namespace=self.config.namespace,
-                            deployment_endpoint_resource=self.config.deployment_endpoint_resource,
-                            extensions=self.config.version)
+            if self.config.deployment_endpoint_resource:
+                urls = BaseUrls(api=self.config.version, namespace=self.config.namespace,
+                                deployment_endpoint_resource=self.config.deployment_endpoint_resource,
+                                extensions=self.config.version)
+            else:
+                urls = BaseUrls(api=self.config.version, namespace=self.config.namespace)
+                
             self.base_url = urls.get_base_url(object_type=obj_type)
         except Exception as err:
             raise Exception('Could not set BaseUrl for type: [ {0} ]'.format(obj_type))

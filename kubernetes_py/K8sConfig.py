@@ -25,7 +25,7 @@ SERVICE_ACCOUNT_TOKEN = "{0}/token".format(SERVICE_ACCOUNT_ROOT)
 ENV_SERVICE_HOST = "KUBERNETES_SERVICE_HOST"
 ENV_SERVICE_PORT = "KUBERNETES_SERVICE_PORT"
 
-VALID_API_VERSIONS = ["v1"]
+VALID_API_VERSIONS = ["v1", "v1beta1"]
 
 VALID_IP_RE = re.compile(
     r'^(http[s]?\:\/\/)?((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})(:[0-9]+)?$')
